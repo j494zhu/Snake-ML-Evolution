@@ -20,6 +20,7 @@ I rebuilt the Snake game using `pygame`, with a specific **"AI Interface"**:
     * `done`: Did we die?
     * `score`: Current game score.
 3.  **Visuals**: I kept the UI rendering enabled. This allows us to visually inspect the "personality" of the model as it trains—watching it go from suicidal to strategic is the best part.
+4. **Reward Function**: I grant +10 when the snake successfullt eats the food. While a -10 penalty will be given when the snake either dies, or spinning infinitely in circles to survive (didn't get any food in a certain period of time)
 
 *`helper.py` serves as our data analyst, plotting the score history in real-time so we can visualize the convergence.*
 
@@ -99,3 +100,17 @@ This 11 parameter MLP model demonstrated a clear learning curve, and is able to 
 ### Next Steps:
 * **Expand State Perception (Spatial Awareness):**
     Currently, the agent acts on immediate local information. The next goal is to augment the input vector to provide more context about the **surrounding grid configurations**. By giving the AI a broader field of view (or specific features detecting enclosed spaces), we aim to help it recognize and avoid complex traps like the U-shape dead ends.
+
+### Modifications:
+
+Now I add the **9x9 grid** around the snake's head into the parameters. This allows the snake to get aware of its surroundings.
+
+Since the 11 parameters I already have are in the directions relative to the snake's orientations, therefore I want to make sure that the **9x9 grid** added this time are also **relative to the snake's orientation**.
+
+* The reward function is the same as before.
+
+
+## Results
+
+This 11 + 81 parameter MLP model did not work out. 
+![Training Plot](version_2_snake_ml_92_mlp_failed/training_plot.png)
