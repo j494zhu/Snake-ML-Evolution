@@ -95,3 +95,7 @@ This 11 parameter MLP model demonstrated a clear learning curve, and is able to 
 * **The "Dead End" Problem (U-Shape Traps):**
     The agent rarely dies from crashing into walls. Instead, most deaths occur due to **self-trapping**.
     * **Possible Reason:** The 11-parameter input vector only detects *immediate* danger (1 block away). The agent lacks the ability to see the global vision or larger neighboring areas, so it often enters U-shaped body formations (cul-de-sacs) to chase food, only to realize too late that it has trapped itself with no way out.
+
+### Next Steps:
+* **Expand State Perception (Spatial Awareness):**
+    Currently, the agent acts on immediate local information. The next goal is to augment the input vector to provide more context about the **surrounding grid configurations**. By giving the AI a broader field of view (or specific features detecting enclosed spaces), we aim to help it recognize and avoid complex traps like the U-shape dead ends.
