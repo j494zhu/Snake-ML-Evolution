@@ -112,5 +112,24 @@ Since the 11 parameters I already have are in the directions relative to the sna
 
 ## Results
 
-This 11 + 81 parameter MLP model did not work out. 
+This 11 + 81 parameter MLP model did not produce a viable agent after intiaial training. 
 ![Training Plot](version_2_snake_ml_92_mlp_failed/training_plot.png)
+**Analysis:**
+
+* **Flatline:** As clearly shown in the graph, the score remains stuck at **0** for almost the entire duration (approx. 80 games). There are only two isolated spikes where the snake likely consumed one unit of food by pure chance, and is not replicable. 
+**~0.02**, indicating that no learing trend was established and the model get stuck under random movement. 
+
+**Possible Causes**
+
+* **Increased Dimensions** Increase from 11 to 92 parameters really adds on complexity. The model struggled to filter out the noise from the 81 grid inputs to find the relevant signal in the allocated time. 
+* **Inadequate Exploration:** I reused the **same reward mechanism and epsilon decay rate** as the simpler 11-parameter model. In this much larger search space, the agent stopped exploring (Epsilon dropped too low) **before** it could discover a successful strategy. 
+* **Result:** The model converged prematurely, resulting in a unintelligent agent that moves ranodmly until it starves or dies. 
+
+**Next Steps**
+    * Since the input space is much larger, the agent needs more time to "map out" the environment before settling on a strategy. I will adjust the decay rate so that `epsilon` drops much slower, forcing the model to attempt random new strategies for a longer period.
+
+**Reward Shaping (Distance-Based Feedback):**
+    * To guide the agent through the sparse environment, I modified the reward function to provide immediate feedback based on **Manhattan Distance**:
+        * **+1 Reward:** If the move brings the snake **closer** to the food.
+        * **-1 Penalty:** If the move takes the snake **further away** from the food.
+    * This changes the problem from "Sparse Rewards" to "Dense Rewards," acting like a compass to point the agent in the right direction.
