@@ -125,10 +125,14 @@ This 11 + 81 parameter MLP model did not produce a viable agent after intiaial t
 * **Inadequate Exploration:** I reused the **same reward mechanism and epsilon decay rate** as the simpler 11-parameter model. In this much larger search space, the agent stopped exploring (Epsilon dropped too low) **before** it could discover a successful strategy. 
 * **Result:** The model converged prematurely, resulting in a unintelligent agent that moves ranodmly until it starves or dies. 
 
-**Next Steps**
+### Next Steps (Fixing the Failure)
+
+To help the model navigate the larger state space (92 parameters) and break the learning deadlock, I implemented two critical adjustments:
+
+1.  **Slower Epsilon Decay (Extended Exploration):**
     * Since the input space is much larger, the agent needs more time to "map out" the environment before settling on a strategy. I will adjust the decay rate so that `epsilon` drops much slower, forcing the model to attempt random new strategies for a longer period.
 
-**Reward Shaping (Distance-Based Feedback):**
+2.  **Reward Shaping (Distance-Based Feedback):**
     * To guide the agent through the sparse environment, I modified the reward function to provide immediate feedback based on **Manhattan Distance**:
         * **+1 Reward:** If the move brings the snake **closer** to the food.
         * **-1 Penalty:** If the move takes the snake **further away** from the food.
