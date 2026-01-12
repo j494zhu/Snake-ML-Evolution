@@ -137,3 +137,35 @@ To help the model navigate the larger state space (92 parameters) and break the 
         * **+1 Reward:** If the move brings the snake **closer** to the food.
         * **-1 Penalty:** If the move takes the snake **further away** from the food.
     * This changes the problem from "Sparse Rewards" to "Dense Rewards," acting like a compass to point the agent in the right direction.
+
+
+### Results: The 92-Parameter Success (with Reward Shaping)
+
+After adding distance-based rewarding function and **Slower Epsilon Decay**, the 92-parameter model is able to learned a viable survival strategy.
+
+![Training Plot](version_3_snake_ml_92_mlp_success/training_plot.png)
+
+**Analysis:**
+* **Slower Convergence:** As shown in the graph, the learning curve is less steep compared to the 11-parameter baseline, and the model struggled to score in the first ~200 games.
+* **Late-Game Surge:** However, starting from Game 200, the model shows a strong upward trend, eventually achieving higher individual scores than the baseline.
+* **Interpretation:** This result matches my prediction: as model has more parameters, the **sample complexity** also increases. The agent simply needs more episodes to "map out" the relationships between the 81 grid pixels and the correct actions.
+
+### Limitations
+
+It is worthnoting that despite having 9 * 9 local vision, the new model's overall performance is **not significantly better** than the simple 11-parameter version.
+
+**Possible Reasons**
+
+1.  **Model Structure Mismatch:**
+    I am feeding a 9 * 9 2-D grid into a **Dense (Fully Connected) Layer**, which flattens out the grid into a 1D vector. This destroys the **spatial correlation** of the 2-D grids. MLP struggles to understand geometry compared to a CNN network. 
+
+2.  **Sparsity of the Input:**
+    In a 9 * 9 grid of 81 inputs, usually only 1 or 2 cells are active at any given time (representing either body or wall). This creates a highly **sparse input vector**, which can make gradient descent inefficient and slower to converge compared to the dense, high-value boolean features of the 11-parameter model.
+
+
+### Next Steps: Transitioning to CNN
+
+Since MLP is not able to effectively perserve **spatial locality** when flattening the grid—my next goal is to upgrade the model to a **Convolutional Neural Network (CNN)**.
+
+* **Objective:** I will rewrite the model to process the $9 \times 9$ grid as a 2D image (3 channels) rather than a flat vector.
+* **Hypothesis:** By using convolutional filters, the agent should be able to recognize complex spatial patterns, like "U-shape traps" or "dead ends", much more effectively than the dense network, potentially to score significantly higher on average. 
